@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>360 Office View</title>
+  <meta name="description" content="">
+  <script src="./js/aframe.min.js"></script>
+</head>
+
+<body>
+  <a-scene>
+    <a-assets>
+      <img id="entry" src="./assets/1-entry.png">
+      <img id="left-room" src="./assets/2-left.jpg">
+      <img id="left-corner" src="./assets/3-left-corner.png">
+      <img id="right-corner" src="./assets/4-right-corner.png">
+      <img id="right-room" src="./assets/5-right.png">
+      <img id="exit" src="./assets/6-exit.png">
+      <img id="icon" src="./assets/arrow.png">
+    </a-assets>
+    <a-image id="left-arrow" src="#icon" position="5 1.5 -8"></a-image>
+    <a-entity position="0 0 0" rotation="0 0 0">
+      <a-entity camera look-controls wasd-controls>
+        <a-entity position="0 0 -3" scale="0.2 0.2 0.2"  geometry="primitive: ring; radiusOuter: 0.20;radiusInner: 0.10;" material="color: #ADD8E6; shader: flat" cursor="maxDistance: 30; fuse: true">
+            <a-animation begin="click" easing="ease-in" attribute="scale" fill="backwards" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
+            <a-animation begin="fusing" easing="ease-in" attribute="scale" fill="forwards" from="1 1 1" to="0.2 0.2 0.2" dur="1500"></a-animation>
+        </a-entity>
+      </a-entity>
+    </a-entity>
+    <a-sky id="background" radius="10" src="#entry"></a-sky>
+  </a-scene>
+  <script>
+    var leftArrow = document.querySelector('#left-arrow');
+    var background = document.querySelector('#background');
+    var currentState = 1;
+    setNewValues(currentState);
+
+    leftArrow.addEventListener('click', function() {
+      newState = getNewState(currentState);
+      setNewValues(newState);
+      currentState = newState;
+    });
+
+    function setNewValues(newState) {
+      if(newState === 1) {
+        background.setAttribute('src', '#entry');
+        leftArrow.setAttribute('position', {'x': 5, 'y': 1.5, 'z': -8});
+	background.setAttribute('rotation', '0 0 0');
+      } else if(newState === 2) {
+        background.setAttribute('src', '#left-room');
+        leftArrow.setAttribute('position', {'x': 0, 'y': 0.5, 'z': -8});
+      } else if(newState === 3) {
+        background.setAttribute('src', '#left-corner');
+      } else if(newState === 4) {
+	background.setAttribute('rotation', '0 90 0');
+        background.setAttribute('src', '#right-corner');
+      } else if(newState === 5) {
+	background.setAttribute('rotation', '0 0 0');
+        background.setAttribute('src', '#right-room');
+      } else if(newState === 6) {
+        background.setAttribute('src', '#exit');
+	background.setAttribute('rotation', '0 90 0');
+      }
+    }
+
+    function getNewState(state) {
+      return (state>5) ? 1 : state+1;
+    }
+  </script>
+</body>
+</html>
